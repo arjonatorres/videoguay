@@ -59,23 +59,23 @@ class SiteController extends Controller
      * Displays homepage.
      *
      * @return string
-     * @param mixed $id
      */
-    public function actionIndex($id)
+    public function actionIndex()
     {
         // $nombre = Yii::$app->db->createCommand('SELECT nombre
         //                                           FROM socios
         //                                          WHERE id = :id', ['id' => $id])
         //                        ->queryScalar();
-        $nombre = (new Query())
-            ->select('nombre')
-            ->from('socios')
-            // ->where('id = :id', ['id' => $id])
-            ->where(['id' => $id])
-            ->scalar();
-        echo '<pre>';
-        var_dump($nombre);
-        // return $this->render('index');
+
+        // $nombre = (new Query())
+        //     ->select('nombre')
+        //     ->from('socios')
+        //     ->where(['id' => $id])
+        //     ->scalar();
+        // echo '<pre>';
+        // var_dump($nombre);
+
+        return $this->render('index');
     }
 
     /**

@@ -10,7 +10,7 @@ use Yii;
  * @property int $id
  * @property string $numero
  * @property string $nombre
- * @property string $dirección
+ * @property string $direccion
  * @property string $telefono
  *
  * @property Alquileres[] $alquileres
@@ -33,7 +33,7 @@ class Socios extends \yii\db\ActiveRecord
         return [
             [['numero', 'nombre'], 'required'],
             [['numero', 'telefono'], 'number'],
-            [['nombre', 'dirección'], 'string', 'max' => 255],
+            [['nombre', 'direccion'], 'string', 'max' => 255],
             [['numero'], 'unique'],
         ];
     }
@@ -47,7 +47,7 @@ class Socios extends \yii\db\ActiveRecord
             'id' => 'ID',
             'numero' => 'Numero',
             'nombre' => 'Nombre',
-            'dirección' => 'Dirección',
+            'direccion' => 'Direccion',
             'telefono' => 'Telefono',
         ];
     }

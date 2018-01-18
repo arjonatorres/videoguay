@@ -20,7 +20,7 @@ class SociosSearch extends Socios
         return [
             [['id'], 'integer'],
             [['numero', 'telefono'], 'number'],
-            [['nombre', 'dirección'], 'safe'],
+            [['nombre', 'direccion'], 'safe'],
         ];
     }
 
@@ -66,7 +66,7 @@ class SociosSearch extends Socios
         ]);
 
         $query->andFilterWhere(['ilike', 'nombre', $this->nombre])
-            ->andFilterWhere(['ilike', 'dirección', $this->dirección]);
+            ->andFilterWhere(['ilike', 'direccion', $this->direccion]);
 
         return $dataProvider;
     }
