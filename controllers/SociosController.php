@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Alquileres;
 use app\models\Peliculas;
 use app\models\Socios;
 use app\models\SociosSearch;
@@ -56,6 +57,13 @@ class SociosController extends Controller
         $peliculas = Peliculas::find()
             ->joinWith('alquileres')
             ->where(['socio_id' => $id]);
+
+        $peliculas = Alquileres::find()
+            ->joinWith('alquileres')
+            ->where(['socio_id' => $id])
+            ->orderBy('created_at DESC')
+            ->limit(10);
+
 
         return $this->render('view', [
             'model' => $this->findModel($id),
