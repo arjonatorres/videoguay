@@ -1,10 +1,13 @@
 <?php
 
+use yii\data\ActiveDataProvider;
+use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Socios */
+/* @var $peliculas app\models\Peliculas[] */
 
 $this->title = $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Socios', 'url' => ['index']];
@@ -35,5 +38,27 @@ $this->params['breadcrumbs'][] = $this->title;
             'telefono',
         ],
     ]) ?>
+
+    <h3>Últimas películas alquiladas</h3>
+    <?= GridView::widget([
+        'dataProvider' => new ActiveDataProvider ([
+            'query' => $peliculas,
+            'pagination' => false,
+            'sort' => false,
+        ]),
+    ]) ?>
+
+    <table class="table">
+        <thead>
+            <th>Código</th>
+            <th>Título</th>
+        </thead>
+        <?php foreach ($peliculas->all() as $pelicula): ?>
+            <tr>
+                <td><?= Html::encode($pelicula->codigo) ?></td>
+                <td><?= Html::encode($pelicula->titulo) ?></td>
+            </tr>
+    <?php endforeach ?>
+    </table>
 
 </div>
