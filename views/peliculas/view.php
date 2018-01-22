@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\Peliculas */
 
-$this->title = $model->id;
+$this->title = $model->titulo;
 $this->params['breadcrumbs'][] = ['label' => 'Peliculas', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -35,4 +35,21 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]) ?>
 
+    <h3>Últimos alquileres de esta película</h3>
+    <table class="table">
+        <thead>
+            <th>Número</th>
+            <th>Nombre</th>
+            <th>Fecha de alquiler</th>
+        </thead>
+        <tbody>
+            <?php foreach ($alquileres as $alquiler): ?>
+                <tr>
+                    <td><?= Html::encode($alquiler->socio->numero) ?></td>
+                    <td><?= Html::encode($alquiler->socio->nombre) ?></td>
+                    <td><?= Html::encode($alquiler->created_at) ?></td>
+                </tr>
+            <?php endforeach ?>
+        </tbody>
+    </table>
 </div>

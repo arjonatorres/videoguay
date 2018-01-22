@@ -9,7 +9,7 @@ use yii\widgets\DetailView;
 /* @var $model app\models\Socios */
 /* @var $peliculas app\models\Peliculas[] */
 
-$this->title = $model->id;
+$this->title = $model->nombre;
 $this->params['breadcrumbs'][] = ['label' => 'Socios', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -40,25 +40,22 @@ $this->params['breadcrumbs'][] = $this->title;
     ]) ?>
 
     <h3>Últimas películas alquiladas</h3>
-    <?= GridView::widget([
-        'dataProvider' => new ActiveDataProvider ([
-            'query' => $peliculas,
-            'pagination' => false,
-            'sort' => false,
-        ]),
-    ]) ?>
 
     <table class="table">
         <thead>
             <th>Código</th>
             <th>Título</th>
+            <th>Fecha de alquiler</th>
         </thead>
-        <?php foreach ($peliculas->all() as $pelicula): ?>
-            <tr>
-                <td><?= Html::encode($pelicula->codigo) ?></td>
-                <td><?= Html::encode($pelicula->titulo) ?></td>
-            </tr>
-    <?php endforeach ?>
+        <tbody>
+            <?php foreach ($alquileres as $alquiler): ?>
+                <tr>
+                    <td><?= Html::encode($alquiler->pelicula->codigo) ?></td>
+                    <td><?= Html::encode($alquiler->pelicula->titulo) ?></td>
+                    <td><?= Html::encode($alquiler->created_at) ?></td>
+                </tr>
+            <?php endforeach ?>
+        </tbody>
     </table>
 
 </div>
