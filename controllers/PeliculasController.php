@@ -61,6 +61,7 @@ class PeliculasController extends Controller
                 'socio_id' => $socio->id,
                 'pelicula_id' => $pelicula->id,
             ]);
+            $alquiler->save();
             return $this->redirect(['index']);
         }
 
