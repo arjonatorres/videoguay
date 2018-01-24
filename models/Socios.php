@@ -50,6 +50,13 @@ class Socios extends \yii\db\ActiveRecord
         ];
     }
 
+    public function getPendientes()
+    {
+        return $this->getAlquileres()
+        ->where(['devolucion' => null])
+        ->orderBy(['created_at' => SORT_DESC]);
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
