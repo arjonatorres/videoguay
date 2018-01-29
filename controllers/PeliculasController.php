@@ -2,12 +2,13 @@
 
 namespace app\controllers;
 
-use app\models\AlquilarForm;
 use app\models\Alquileres;
 use app\models\Peliculas;
 use app\models\PeliculasSearch;
 use app\models\Socios;
 use Yii;
+use yii\data\Pagination;
+use yii\data\Sort;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -31,19 +32,33 @@ class PeliculasController extends Controller
             ],
         ];
     }
-
     /**
-     * Lists all Peliculas models.
+     * Muestra un listado paginado de películas.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionListado()
     {
-        $searchModel = new PeliculasSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+        $peliculas = Peliculas::find();
+        $pagination = new Pagination([
+            'totalCount' => $peliculas->count(),
+            'pageSize' => 20,
+        ]);
+        $sort = new Sort([
+            'attributes' => [
+                'codigo' => ['label' => 'Código'],
+                'titulo' => ['label' => 'Título'],
+                'precio_alq' => ['label' => 'Precio de alquiler'],
+            ],
+        ]);
+        $peliculas = $peliculas
+            ->orderBy($sort->orders)
+            ->limit($pagination->limit)
+            ->offset($pagination->offset)
+            ->all();
+        return $this->render('listado', [
+            'peliculas' => $peliculas,
+            'pagination' => $pagination,
+            'sort' => $sort,
         ]);
     }
 
@@ -53,7 +68,8 @@ class PeliculasController extends Controller
      */
     public function actionAlquilar()
     {
-        $alquilarForm = new AlquilarForm();
+        $alquilarForm = new \app\models\AlquilarForm();
+
         if ($alquilarForm->load(Yii::$app->request->post()) && $alquilarForm->validate()) {
             $socio = Socios::findOne(['numero' => $alquilarForm->numero]);
             $pelicula = Peliculas::findOne(['codigo' => $alquilarForm->codigo]);
@@ -68,6 +84,21 @@ class PeliculasController extends Controller
 
         return $this->render('alquilar', [
             'alquilarForm' => $alquilarForm,
+        ]);
+    }
+
+    /**
+     * Lists all Peliculas models.
+     * @return mixed
+     */
+    public function actionIndex()
+    {
+        $searchModel = new PeliculasSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
 

@@ -4,19 +4,13 @@ namespace app\models;
 
 use yii\base\Model;
 
-class GestionarForm extends Model
+class GestionarSocioForm extends Model
 {
     /**
-     * El ńumero del socio.
+     * El número del socio.
      * @var string
      */
     public $numero;
-
-    /**
-     * El código de la película.
-     * @var string
-     */
-    public $codigo;
 
     public function formName()
     {
@@ -27,7 +21,6 @@ class GestionarForm extends Model
     {
         return [
             'numero' => 'Número de socio',
-            'codigo' => 'Código de la película',
         ];
     }
 
@@ -35,19 +28,14 @@ class GestionarForm extends Model
     {
         return [
             [['numero'], 'required'],
-            [['numero', 'codigo'], 'number'],
+            [['numero'], 'default'],
+            [['numero'], 'integer'],
             [
                 ['numero'],
                 'exist',
                 'skipOnError' => true,
                 'targetClass' => Socios::className(),
-                'targetAttribute' => ['numero' => 'numero'], ],
-            [
-                ['codigo'],
-                'exist',
-                'skipOnError' => true,
-                'targetClass' => Peliculas::className(),
-                'targetAttribute' => ['codigo' => 'codigo'],
+                'targetAttribute' => ['numero' => 'numero'],
             ],
         ];
     }

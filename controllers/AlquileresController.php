@@ -4,12 +4,16 @@ namespace app\controllers;
 
 use app\models\Alquileres;
 use app\models\AlquileresSearch;
-use app\models\GestionarForm;
+use app\models\GestionarPeliculaForm;
+use app\models\GestionarSocioForm;
+use app\models\Peliculas;
 use app\models\Socios;
 use Yii;
 use yii\filters\VerbFilter;
+use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 /**
  * AlquileresController implements the CRUD actions for Alquileres model.
@@ -34,20 +38,80 @@ class AlquileresController extends Controller
     /**
      * Alquila y devuelve películas en una sola acción.
      * @return mixed
+     * @param null|mixed $numero
+     * @param null|mixed $codigo
      */
-    public function actionGestionar()
+    public function actionGestionar($numero = null, $codigo = null)
     {
-        $model = new GestionarForm();
+        $gestionarSocioForm = new GestionarSocioForm([
+            'numero' => $numero,
+        ]);
 
         $data = [];
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $socio = Socios::findOne(['numero' => $model->numero]);
-            $data['socio'] = $socio;
+        if ($numero !== null && $gestionarSocioForm->validate()) {
+            $data['socio'] = Socios::findOne(['numero' => $numero]);
+            $gestionarPeliculaForm = new GestionarPeliculaForm([
+                'numero' => $numero,
+                'codigo' => $codigo,
+            ]);
+            $data['gestionarPeliculaForm'] = $gestionarPeliculaForm;
+            if ($codigo !== null && $gestionarPeliculaForm->validate()) {
+                $data['pelicula'] = Peliculas::findOne([
+                    'codigo' => $gestionarPeliculaForm->codigo,
+                ]);
+            }
         }
 
-        $data['model'] = $model;
+        $data['gestionarSocioForm'] = $gestionarSocioForm;
         return $this->render('gestionar', $data);
+    }
+
+    /**
+     * Alquila una película dados `socio_id` y `pelicula_id`
+     * pasados por POST.
+     * @param  string   $numero        El número del socio para volver a él.
+     * @return Response                La redirección.
+     * @throws BadRequestHttpException Si algún `id` es incorrecto.
+     */
+    public function actionAlquilar($numero)
+    {
+        $alquiler = new Alquileres();
+
+        if ($alquiler->load(Yii::$app->request->post(), '') &&
+            $alquiler->save()) {
+            return $this->redirect([
+                'alquileres/gestionar',
+                'numero' => $numero,
+            ]);
+        }
+
+        throw new BadRequestHttpException('No se ha creado el alquiler.');
+    }
+
+    /**
+     * Devuelve un alquiler indicado por el `id` pasado por POST.
+     * @param  string   $numero      El número del socio para volver a él.
+     * @return Response              La redirección.
+     * @throws NotFoundHttpException Si el `id` falta o no es correcto.
+     */
+    public function actionDevolver($numero)
+    {
+        if (($id = Yii::$app->request->post('id')) === null) {
+            throw new NotFoundHttpException('Falta el alquiler.');
+        }
+
+        if (($alquiler = Alquileres::findOne($id)) === null) {
+            throw new NotFoundHttpException('El alquiler no existe.');
+        }
+
+        $alquiler->devolucion = date('Y-m-d H:i:s');
+        $alquiler->save();
+
+        return $this->redirect([
+            'alquileres/gestionar',
+            'numero' => $numero,
+        ]);
     }
 
     /**

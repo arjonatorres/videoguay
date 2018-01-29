@@ -31,7 +31,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
             'numero',
             'nombre',
             'direccion',
@@ -39,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]) ?>
 
-    <h3>Últimas películas alquiladas</h3>
+    <h3>Últimas peliculas alquiladas</h3>
 
     <table class="table">
         <thead>
@@ -57,5 +56,4 @@ $this->params['breadcrumbs'][] = $this->title;
             <?php endforeach ?>
         </tbody>
     </table>
-
 </div>

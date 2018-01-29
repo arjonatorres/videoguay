@@ -27,7 +27,8 @@ class AlquilarForm extends Model
                 'exist',
                 'skipOnError' => true,
                 'targetClass' => Socios::className(),
-                'targetAttribute' => ['numero' => 'numero'], ],
+                'targetAttribute' => ['numero' => 'numero'],
+            ],
             [
                 ['codigo'],
                 'exist',

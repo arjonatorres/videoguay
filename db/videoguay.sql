@@ -57,7 +57,7 @@ INSERT INTO peliculas (codigo, titulo, precio_alq)
           , (3000, 'El ataque de los clones', 3);
 
 INSERT INTO alquileres (socio_id, pelicula_id, created_at, devolucion)
-     VALUES (1, 1, current_timestamp - 'P4D'::interval, current_timestamp - 'P3D'::interval)
+     VALUES (1, 1, current_timestamp - 'P4D'::interval, null) --current_timestamp - 'P3D'::interval)
           , (1, 2, current_timestamp - 'P2D'::interval, null)
-          , (1, 3, current_timestamp - 'P1D'::interval, current_timestamp)
-          , (1, 1, current_timestamp - 'P3D'::interval, null);
+          , (1, 3, current_timestamp - 'P1D'::interval, null); --current_timestamp)
+          --, (3, 1, current_timestamp - 'P3D'::interval, null);

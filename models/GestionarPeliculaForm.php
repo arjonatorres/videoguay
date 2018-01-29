@@ -4,14 +4,13 @@ namespace app\models;
 
 use yii\base\Model;
 
-class GestionarForm extends Model
+class GestionarPeliculaForm extends Model
 {
     /**
-     * El ńumero del socio.
+     * El número del socio.
      * @var string
      */
     public $numero;
-
     /**
      * El código de la película.
      * @var string
@@ -27,21 +26,23 @@ class GestionarForm extends Model
     {
         return [
             'numero' => 'Número de socio',
-            'codigo' => 'Código de la película',
+            'codigo' => 'Código de película',
         ];
     }
 
     public function rules()
     {
         return [
-            [['numero'], 'required'],
-            [['numero', 'codigo'], 'number'],
+            [['numero', 'codigo'], 'required'],
+            [['numero', 'codigo'], 'default'],
+            [['numero', 'codigo'], 'integer'],
             [
                 ['numero'],
                 'exist',
                 'skipOnError' => true,
                 'targetClass' => Socios::className(),
-                'targetAttribute' => ['numero' => 'numero'], ],
+                'targetAttribute' => ['numero' => 'numero'],
+            ],
             [
                 ['codigo'],
                 'exist',
