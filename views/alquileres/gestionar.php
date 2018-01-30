@@ -7,10 +7,14 @@ use yii\widgets\ActiveForm;
 /** @var $gestionarPeliculaForm \app\models\GestionarPeliculaForm */
 /** @var $socio \app\models\Socios */
 /** @var $pelicula \app\models\Peliculas */
+
+$this->title = 'Gestionar Alquileres';
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="row">
     <div class="col-md-6">
+        <h1><?= Html::encode($this->title) ?></h1>
         <?php $form = ActiveForm::begin([
             'method' => 'get',
             'action' => ['alquileres/gestionar'],
@@ -45,7 +49,22 @@ use yii\widgets\ActiveForm;
                 ) ?></h4>
 
                 <?php if ($pelicula->estaAlquilada): ?>
-                    <h4>Película ya alquilada</h4>
+                    <?php $alquiler = $pelicula->getAlquileres()->where([
+                        'devolucion' => null,
+                    ])->One()
+                    ?>
+
+                    <h4>Película ya alquilada por
+                        <?= Html::a(Html::encode($alquiler->socio->nombre),
+                        [
+                            'alquileres/gestionar',
+                            'numero' => $alquiler->socio->numero,
+                            ]) ?>
+                    </h4>
+                    <?= Html::beginForm(['alquileres/devolver', 'numero' => $socio->numero], 'post') ?>
+                        <?= Html::hiddenInput('id', $alquiler->id) ?>
+                        <td><?= Html::submitButton('Devolver', ['class' => 'btn btn-xs btn-danger']) ?></td>
+                    <?= Html::endForm() ?>
                 <?php else: ?>
                     <?= Html::beginForm([
                         'alquileres/alquilar',
@@ -85,7 +104,7 @@ use yii\widgets\ActiveForm;
                                 ) ?></td>
                                 <?= Html::beginForm(['alquileres/devolver', 'numero' => $socio->numero], 'post') ?>
                                     <?= Html::hiddenInput('id', $alquiler->id) ?>
-                                    <td><?= Html::submitButton('Devolver', ['class' => 'btn-xs btn-danger']) ?></td>
+                                    <td><?= Html::submitButton('Devolver', ['class' => 'btn btn-xs btn-danger']) ?></td>
                                 <?= Html::endForm() ?>
                             </tr>
                         <?php endforeach ?>

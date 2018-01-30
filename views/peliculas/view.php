@@ -42,13 +42,26 @@ $this->params['breadcrumbs'][] = $this->title;
             <th>Número</th>
             <th>Nombre</th>
             <th>Fecha de alquiler</th>
+            <th>Fecha de devolución</th>
         </thead>
         <tbody>
             <?php foreach ($alquileres as $alquiler): ?>
                 <tr>
                     <td><?= Html::encode($alquiler->socio->numero) ?></td>
-                    <td><?= Html::encode($alquiler->socio->nombre) ?></td>
-                    <td><?= Html::encode($alquiler->created_at) ?></td>
+                    <td><?= Html::a(Html::encode($alquiler->socio->nombre),
+                    [
+                        'socios/view',
+                        'id' => $alquiler->socio->id,
+                        ]) ?></td>
+                    <td><?= Html::encode(Yii::$app->formatter->asDatetime($alquiler->created_at)) ?></td>
+                    <?php if($alquiler->devolucion === null): ?>
+                        <?= Html::beginForm(['alquileres/devolver', 'numero' => $alquiler->socio->numero], 'post') ?>
+                            <?= Html::hiddenInput('id', $alquiler->id) ?>
+                            <td><?= Html::submitButton('Devolver', ['class' => 'btn btn-xs btn-danger']) ?></td>
+                        <?= Html::endForm() ?>
+                    <?php else: ?>
+                        <td><?= Yii::$app->formatter->asDatetime($alquiler->devolucion) ?></td>
+                    <?php endif ?>
                 </tr>
             <?php endforeach ?>
         </tbody>
