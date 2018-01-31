@@ -46,6 +46,12 @@ class SociosController extends Controller
         ]);
     }
 
+    public function beforeAction($action)
+    {
+        Yii::$app->session->set('rutaVuelta', Url::to());
+        return parent::beforeAction($action);
+    }
+
     /**
      * Displays a single Socios model.
      * @param int $id
@@ -61,7 +67,7 @@ class SociosController extends Controller
             ->limit(10)
             ->all();
 
-        Yii::$app->session->set('rutaVuelta', Url::to());
+        // Yii::$app->session->set('rutaVuelta', Url::to());
 
         return $this->render('view', [
             'model' => $this->findModel($id),

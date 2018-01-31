@@ -36,6 +36,14 @@ class AlquileresController extends Controller
         ];
     }
 
+    public function beforeAction($action)
+    {
+        if ($action->id !== 'devolver') {
+            Yii::$app->session->set('rutaVuelta', Url::to());
+        }
+        return parent::beforeAction($action);
+    }
+
     /**
      * Alquila y devuelve películas en una sola acción.
      * @return mixed
@@ -63,7 +71,7 @@ class AlquileresController extends Controller
                 ]);
             }
         }
-        Yii::$app->session->set('rutaVuelta', Url::to());
+        // Yii::$app->session->set('rutaVuelta', Url::to());
 
         $data['gestionarSocioForm'] = $gestionarSocioForm;
         return $this->render('gestionar', $data);
