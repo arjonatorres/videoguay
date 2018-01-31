@@ -7,6 +7,7 @@ use app\models\Socios;
 use app\models\SociosSearch;
 use Yii;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -59,6 +60,8 @@ class SociosController extends Controller
             ->orderBy('created_at DESC')
             ->limit(10)
             ->all();
+
+        Yii::$app->session->set('rutaVuelta', Url::to());
 
         return $this->render('view', [
             'model' => $this->findModel($id),
