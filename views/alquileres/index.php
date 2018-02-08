@@ -3,6 +3,8 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 
+use kartik\datecontrol\DateControl;
+
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\AlquileresSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -13,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="alquileres-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php //echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
         <?= Html::a('Create Alquileres', ['create'], ['class' => 'btn btn-success']) ?>
@@ -27,7 +29,15 @@ $this->params['breadcrumbs'][] = $this->title;
             'socio.nombre:text:Nombre del socio',
             'pelicula.codigo:text:Código de la película',
             'pelicula.titulo:text:Título de la película',
-            'created_at:datetime',
+            [
+                'attribute' => 'created_at',
+                'filter' => DateControl::widget([
+                    'type' => DateControl::FORMAT_DATE,
+                    'model' => $searchModel,
+                    'attribute' => 'created_at',
+                ]),
+                'format' => 'datetime',
+            ],
             'devolucion:datetime',
 
             ['class' => 'yii\grid\ActionColumn'],

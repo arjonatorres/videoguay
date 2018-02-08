@@ -93,6 +93,11 @@ $config = [
                         'weekStart' => 1,
                     ],
                 ],
+                \kartik\datecontrol\Module::FORMAT_DATE => [
+                    'options' => [
+                        'readonly' => true,
+                    ],
+                ],
             ],
         ],
     ],

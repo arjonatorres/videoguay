@@ -93,7 +93,7 @@ class AlquileresSearch extends Alquileres
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'created_at' => $this->created_at,
+            'cast(created_at as date)' => $this->created_at,
             'devolucion' => $this->devolucion,
             'peliculas.codigo' => $this->getAttribute('pelicula.codigo'),
             'socios.numero' => $this->getAttribute('socio.numero'),
