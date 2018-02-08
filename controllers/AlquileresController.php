@@ -9,6 +9,7 @@ use app\models\GestionarSocioForm;
 use app\models\Peliculas;
 use app\models\Socios;
 use Yii;
+use yii\data\ActiveDataProvider;
 use yii\filters\VerbFilter;
 use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
@@ -133,9 +134,31 @@ class AlquileresController extends Controller
     {
         $searchModel = new AlquileresSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        Yii::trace($dataProvider);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionListado()
+    {
+        $dataProvider = new ActiveDataProvider([
+            'query' => Alquileres::find()->joinWith(['socio', 'pelicula']),
+        ]);
+
+        $dataProvider->sort->attributes['socio.numero'] = [
+            'asc' => ['socios.numero' => SORT_ASC],
+            'desc' => ['socios.numero' => SORT_DESC],
+        ];
+
+        $dataProvider->sort->attributes['pelicula.codigo'] = [
+            'asc' => ['peliculas.codigo' => SORT_ASC],
+            'desc' => ['peliculas.codigo' => SORT_DESC],
+        ];
+
+        return $this->render('listado', [
             'dataProvider' => $dataProvider,
         ]);
     }

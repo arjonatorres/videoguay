@@ -14,12 +14,20 @@ namespace app\models;
  */
 class Peliculas extends \yii\db\ActiveRecord
 {
+    public $todo;
+
+    private $_pendiente;
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
         return 'peliculas';
+    }
+
+    public function attributes()
+    {
+        return array_merge(parent::attributes(), ['todo']);
     }
 
     /**
@@ -45,19 +53,31 @@ class Peliculas extends \yii\db\ActiveRecord
             'codigo' => 'Código',
             'titulo' => 'Título',
             'precio_alq' => 'Precio alquiler',
+            'todo' => 'Todo',
         ];
     }
 
     /**
      * Comprueba si una película está alquilada.
-     * @return bool Si está alquilada o no.
+     * @return bool Si la película está alquilada o no.
      */
     public function getEstaAlquilada()
     {
-        return $this->getAlquileres()
-            ->where(['devolucion' => null])
-            ->exists();
+        $alquiler = $this->getAlquileres()
+                ->where(['devolucion' => null])
+                ->one();
+        $this->_pendiente = $alquiler;
+        return $alquiler !== null;
     }
+
+    public function getPendiente()
+    {
+        if ($this->_pendiente === null) {
+            $this->getEstaAlquilada();
+        }
+        return $this->_pendiente;
+    }
+
 
     /**
      * @return \yii\db\ActiveQuery

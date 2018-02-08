@@ -1,5 +1,12 @@
 <?php
+
 use yii\data\ActiveDataProvider;
+use yii\grid\GridView;
+use yii\grid\DataColumn;
+use yii\grid\ActionColumn;
+use yii\grid\SerialColumn;
+
+use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\widgets\LinkPager;
 use yii\widgets\DetailView;
@@ -8,40 +15,66 @@ use yii\widgets\DetailView;
 /** @var $dataProvider ActiveDataProvider */
 ?>
 
-<table class="table table-stripped">
-    <thead>
-        <th><?= $dataProvider->sort->link('codigo') ?></th>
-        <th><?= $dataProvider->sort->link('titulo') ?></th>
-        <th><?= $dataProvider->sort->link('precio_alq') ?></th>
-    </thead>
-    <tbody>
-        <?php foreach ($dataProvider->getModels() as $pelicula): ?>
-            <tr>
-                <td><?= Html::encode($pelicula->codigo) ?></td>
-                <td><?= Html::encode($pelicula->titulo) ?></td>
-                <td><?= Html::encode(
-                    Yii::$app->formatter->asCurrency($pelicula->precio_alq)
-                    ) ?></td>
-                </tr>
-            <?php endforeach ?>
-    </tbody>
-</table>
-
-<?= LinkPager::widget(['pagination' => $dataProvider->pagination]) ?>
-
-<?php foreach ($dataProvider->getModels() as $pelicula): ?>
-    <?= DetailView::widget([
-        'model' => $pelicula,
-        'attributes' => [
-            'codigo',
-            'titulo',
-            [
-                'label' => 'Precio de alquiler',
-                'value' => $pelicula->precio_alq,
-                'format' => 'currency',
-                'contentOptions' => ['class' => 'text-danger'],
-            ],
-            //'precio_alq:currency',
+<?= GridView::widget([
+    'dataProvider' => $dataProvider,
+    'columns' => [
+        [
+            'class' => SerialColumn::className(),
+            'header' => 'numero',
         ],
-    ]); ?>
-<?php endforeach ?>
+        'codigo',
+        'titulo',
+        [
+            // 'class' => DataColumn::className(), Se puede quitar porque es por defecto
+            'attribute' => 'todo',
+            // 'label' => 'Código + Título + Precio',
+            'value' => function($model, $key, $index, $column) {
+                return $model->codigo . ' ' . $model->titulo . ' '
+                . Yii::$app->formatter->asCurrency($model->precio_alq);
+            },
+            'format' => 'text',
+        ],
+        [
+            'class' => ActionColumn::className(),
+            'header' => 'Acciones',
+            'template' => '{delete} {update} {devolver}',
+            'buttons' => [
+                'devolver' => function ($url, $model, $key) {
+                    if ($model->estaAlquilada) {
+                        Yii::$app->session->set('rutaVuelta', Url::to());
+                        return Html::beginForm([
+                            'alquileres/devolver',
+                            'numero' => $model->pendiente->socio->numero,
+                        ], 'post', ['style' => 'display: inline'])
+                        . Html::hiddenInput('id', $model->pendiente->id)
+                        . Html::submitButton('Devolver', ['class' => 'btn btn-xs btn-success'])
+                        . Html::endForm();
+                    }
+                },
+                'delete' => function ($url, $model, $key) {
+                    return Html::a(
+                        'Borrar',
+                        [
+                            'peliculas/delete',
+                            'id' => $model->id
+                        ],
+                        [
+                            'data-method' => 'post',
+                            'class' => 'btn btn-xs btn-danger'
+                        ]
+                    );
+                },
+                'update' => function ($url, $model, $key) {
+                    return Html::a(
+                        'Cambiar',
+                        [
+                            'peliculas/update',
+                            'id' => $model->id
+                        ],
+                        ['class' => 'btn btn-xs btn-info']
+                    );
+                },
+            ],
+        ],
+    ],
+]) ?>

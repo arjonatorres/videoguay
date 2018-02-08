@@ -11,7 +11,7 @@ $config = [
     'controllerNamespace' => 'app\commands',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
-        '@npm'   => '@vendor/npm-asset',
+        '@npm' => '@vendor/npm-asset',
         '@tests' => '@app/tests',
     ],
     'components' => [
@@ -20,6 +20,11 @@ $config = [
         ],
         'log' => $log,
         'db' => $db,
+        'formatter' => [
+            'timeZone' => 'Europe/Madrid',
+            'datetimeFormat' => 'php:d-m-Y H:i:s',
+            'dateFormat' => 'php:d-m-Y',
+        ],
     ],
     'params' => $params,
     'controllerMap' => [

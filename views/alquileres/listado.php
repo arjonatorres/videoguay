@@ -13,20 +13,15 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="alquileres-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <p>
-        <?= Html::a('Create Alquileres', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
         'columns' => [
-            'socio.numero:text:Número del socio',
-            'socio.nombre:text:Nombre del socio',
-            'pelicula.codigo:text:Código de la película',
-            'pelicula.titulo:text:Título de la película',
+            'socio.numero',
+            'socio.nombre',
+            'pelicula.codigo',
+            'pelicula.titulo',
             'created_at:datetime',
             'devolucion:datetime',
 
