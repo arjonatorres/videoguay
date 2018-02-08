@@ -13,6 +13,22 @@ $config = [
         '@npm' => '@vendor/npm-asset',
     ],
     'language' => 'es-ES',
+    'container' => [
+        'definitions' => [
+            yii\data\Pagination::className() => [
+                'pageSize' => 5,
+            ],
+            kartik\number\NumberControl::className() => [
+                'maskedInputOptions' => [
+                    'prefix' => '',
+                    'suffix' => ' €',
+                    'groupSeparator' => '.',
+                    'radixPoint' => ',',
+                    // 'allowMinus' => false
+                ],
+            ],
+        ],
+    ],
     'components' => [
         'formatter' => [
             'timeZone' => 'Europe/Madrid',

@@ -17,7 +17,7 @@ use kartik\number\NumberControl;
 
     <?= $form->field($model, 'titulo')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'precio_alq')->textInput() ?>
+    <?= $form->field($model, 'precio_alq')->widget(NumberControl::classname()); ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
