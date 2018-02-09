@@ -3,7 +3,6 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 
-use kartik\datecontrol\DateControl;
 use kartik\daterange\DateRangePicker;
 
 /* @var $this yii\web\View */
@@ -32,17 +31,26 @@ $this->params['breadcrumbs'][] = $this->title;
             'pelicula.titulo:text:Título de la película',
             [
                 'attribute' => 'created_at',
+                'content' => function($model, $key, $index, $column) use ($searchModel) {
+                    return Html::a(
+                        Yii::$app->formatter->asDatetime($model->created_at),
+                        [
+                            'alquileres/index',
+                            $searchModel->formName() . '[created_at]'
+                                => date('d-m-Y', strtotime($model->created_at))
+                                . ' a ' . date('d-m-Y', strtotime($model->created_at)),
+                        ]
+                    );
+                },
                 'filter' => DateRangePicker::widget([
                     'convertFormat' => true,
                     'pluginOptions'=>[
                         'locale'=>[
-                            'format'=>'d-m-Y',
-                            'separator'=>'/',
+                            'format'=> 'd-m-Y',
+                            'separator'=>' a ',
                         ],
                         'opens'=>'left'
                     ],
-
-                    // 'type' => DateControl::FORMAT_DATE,
                     'model' => $searchModel,
                     'attribute' => 'created_at',
                 ]),

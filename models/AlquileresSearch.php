@@ -102,9 +102,9 @@ class AlquileresSearch extends Alquileres
         if ($this->created_at !== null) {
             $query->andFilterWhere([
                 'between',
-                'created_at',
-                preg_split('/\//', $this->created_at)[0],
-                preg_split('/\//', $this->created_at)[1],
+                'cast(created_at as date)',
+                preg_split('/a/', $this->created_at)[0],
+                preg_split('/a/', $this->created_at)[1],
             ]);
         }
         $query->andFilterWhere(['ilike', 'peliculas.titulo', $this->getAttribute('pelicula.titulo')]);
