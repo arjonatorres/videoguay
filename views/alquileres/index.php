@@ -31,6 +31,16 @@ $this->params['breadcrumbs'][] = $this->title;
             'pelicula.titulo:text:Título de la película',
             [
                 'attribute' => 'created_at',
+                'content' => function($model, $key, $index, $column) use ($searchModel) {
+                    return Html::a(
+                        $model->created_at,
+                        [
+                            'alquileres/index',
+                            $searchModel->formName() . '[created_at]'
+                                => date('Y-m-d', strtotime($model->created_at)),
+                        ]
+                    );
+                },
                 'filter' => DateControl::widget([
                     'type' => DateControl::FORMAT_DATE,
                     'model' => $searchModel,
