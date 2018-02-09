@@ -31,7 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'pelicula.titulo:text:Título de la película',
             [
                 'attribute' => 'created_at',
-                'content' => function($model, $key, $index, $column) use ($searchModel) {
+                'value' => function($model, $key, $index, $column) use ($searchModel) {
                     return Html::a(
                         Yii::$app->formatter->asDatetime($model->created_at),
                         [
@@ -54,7 +54,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'model' => $searchModel,
                     'attribute' => 'created_at',
                 ]),
-                'format' => 'datetime',
+                'format' => 'raw',
             ],
             'devolucion:datetime',
 

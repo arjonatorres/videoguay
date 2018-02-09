@@ -16,6 +16,7 @@ class AlquileresSearch extends Alquileres
     public function rules()
     {
         return [
+            [['created_at'], 'default'],
             [[
                 'pelicula.codigo',
                 'socio.numero',
