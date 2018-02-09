@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 use kartik\datecontrol\DateControl;
+use kartik\daterange\DateRangePicker;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\AlquileresSearch */
@@ -31,8 +32,17 @@ $this->params['breadcrumbs'][] = $this->title;
             'pelicula.titulo:text:Título de la película',
             [
                 'attribute' => 'created_at',
-                'filter' => DateControl::widget([
-                    'type' => DateControl::FORMAT_DATE,
+                'filter' => DateRangePicker::widget([
+                    'convertFormat' => true,
+                    'pluginOptions'=>[
+                        'locale'=>[
+                            'format'=>'d-m-Y',
+                            'separator'=>'/',
+                        ],
+                        'opens'=>'left'
+                    ],
+
+                    // 'type' => DateControl::FORMAT_DATE,
                     'model' => $searchModel,
                     'attribute' => 'created_at',
                 ]),

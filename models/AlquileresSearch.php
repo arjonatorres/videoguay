@@ -93,12 +93,20 @@ class AlquileresSearch extends Alquileres
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'cast(created_at as date)' => $this->created_at,
+            // 'cast(created_at as date)' => $this->created_at,
             'devolucion' => $this->devolucion,
             'peliculas.codigo' => $this->getAttribute('pelicula.codigo'),
             'socios.numero' => $this->getAttribute('socio.numero'),
         ]);
 
+        if ($this->created_at !== null) {
+            $query->andFilterWhere([
+                'between',
+                'created_at',
+                preg_split('/\//', $this->created_at)[0],
+                preg_split('/\//', $this->created_at)[1],
+            ]);
+        }
         $query->andFilterWhere(['ilike', 'peliculas.titulo', $this->getAttribute('pelicula.titulo')]);
         $query->andFilterWhere(['ilike', 'socios.nombre', $this->getAttribute('socio.nombre')]);
 
