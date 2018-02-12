@@ -12,6 +12,7 @@ use yii\web\IdentityInterface;
  * @property string $nombre
  * @property string $password
  * @property string $email
+ * @property string $auth_key
  */
 class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
 {
@@ -64,12 +65,12 @@ class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
 
     public function getAuthKey()
     {
-        // return $this->authKey;
+        return $this->auth_key;
     }
 
     public function validateAuthKey($authKey)
     {
-        // return $this->authKey === $authKey;
+        return $this->auth_key === $authKey;
     }
 
     public function validatePassword($password)

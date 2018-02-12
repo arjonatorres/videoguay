@@ -10,6 +10,7 @@ use app\models\Peliculas;
 use app\models\Socios;
 use Yii;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
@@ -32,6 +33,26 @@ class AlquileresController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+                ],
+            ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['gestionar', 'index'],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['gestionar'],
+                        'roles' => ['@'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['index'],
+                        'roles' => ['@'],
+                        // Que se llame pepe
+                        'matchCallback' => function ($rule, $action) {
+                            return Yii::$app->user->identity->nombre == 'pepe';
+                        },
+                    ],
                 ],
             ],
         ];
