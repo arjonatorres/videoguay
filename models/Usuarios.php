@@ -16,6 +16,7 @@ use yii\web\IdentityInterface;
  */
 class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
 {
+    public $password_repeat;
     /**
      * @inheritdoc
      */
@@ -30,10 +31,17 @@ class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['nombre', 'password'], 'required'],
+            [['nombre', 'password', 'password_repeat'], 'required'],
             [['nombre', 'password', 'email'], 'string', 'max' => 255],
             [['nombre'], 'unique'],
+            ['password_repeat', 'compare', 'compareAttribute' => 'password'],
+            [['email'], 'email'],
         ];
+    }
+
+    public function attributes()
+    {
+        return array_merge(parent::attributes(), ['password_repeat']);
     }
 
     /**
@@ -43,8 +51,9 @@ class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
     {
         return [
             'id' => 'ID',
-            'nombre' => 'Nombre',
-            'password' => 'Password',
+            'nombre' => 'Nombre de usuario',
+            'password' => 'Contraseña',
+            'password_repeat' => 'Confirmar contraseña',
             'email' => 'Email',
         ];
     }
@@ -76,5 +85,17 @@ class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
     public function validatePassword($password)
     {
         return Yii::$app->security->validatePassword($password, $this->password);
+    }
+
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if ($insert) {
+                $this->auth_key = Yii::$app->security->generateRandomString();
+                $this->password = Yii::$app->security->generatePasswordHash($this->password);
+            }
+        }
+        return true;
+        return false;
     }
 }
