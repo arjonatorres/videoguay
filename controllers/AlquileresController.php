@@ -17,6 +17,7 @@ use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use yii\widgets\ActiveForm;
 
 /**
  * AlquileresController implements the CRUD actions for Alquileres model.
@@ -58,12 +59,43 @@ class AlquileresController extends Controller
         ];
     }
 
+    public function actionPendientes($numero)
+    {
+        $socio = Socios::findOne(['numero' => $numero]);
+        if ($socio === null) {
+            return '';
+        }
+
+        $pendientes = $socio->getPendientes()->with('pelicula');
+
+        return $this->renderAjax('pendientes', [
+            'pendientes' => $pendientes,
+        ]);
+    }
+
     public function beforeAction($action)
     {
         if ($action->id !== 'devolver') {
             Yii::$app->session->set('rutaVuelta', Url::to());
         }
         return parent::beforeAction($action);
+    }
+
+    public function actionGestionarAjax($numero = null, $codigo = null)
+    {
+        $gestionarPeliculaForm = new GestionarPeliculaForm([
+            'numero' => $numero,
+            'codigo' => $codigo,
+        ]);
+
+        if (Yii::$app->request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($gestionarPeliculaForm);
+        }
+
+        return $this->render('gestionar-ajax', [
+            'gestionarPeliculaForm' => $gestionarPeliculaForm,
+        ]);
     }
 
     /**
@@ -77,6 +109,11 @@ class AlquileresController extends Controller
         $gestionarSocioForm = new GestionarSocioForm([
             'numero' => $numero,
         ]);
+
+        if (Yii::$app->request->isAjax && $gestionarSocioForm->load(Yii::$app->request->queryParams)) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($gestionarSocioForm);
+        }
 
         $data = [];
 

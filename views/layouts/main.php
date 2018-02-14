@@ -31,6 +31,7 @@ AppAsset::register($this);
     $items = [
         ['label' => 'Home', 'url' => ['/site/index']],
         ['label' => 'Gestionar', 'url' => ['alquileres/gestionar']],
+        ['label' => 'Ajax', 'url' => ['alquileres/gestionar-ajax']],
         ['label' => 'Socios', 'url' => ['socios/index']],
         ['label' => 'Películas', 'url' => ['peliculas/index']],
         ['label' => 'Alquileres', 'url' => ['alquileres/index']],

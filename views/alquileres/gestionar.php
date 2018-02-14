@@ -16,10 +16,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="col-md-6">
         <h1><?= Html::encode($this->title) ?></h1>
         <?php $form = ActiveForm::begin([
+            'id' => 'gestionar-socio-form',
             'method' => 'get',
             'action' => ['alquileres/gestionar'],
         ]) ?>
-            <?= $form->field($gestionarSocioForm, 'numero') ?>
+            <?= $form->field($gestionarSocioForm, 'numero', ['enableAjaxValidation' => true]) ?>
             <div class="form-group">
                 <?= Html::submitButton('Buscar socio', ['class' => 'btn btn-success']) ?>
             </div>
