@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\imagine\Image;
 use yii\web\IdentityInterface;
 
 /**
@@ -20,6 +21,13 @@ class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
     const ESCENARIO_UPDATE = 'update';
 
     public $password_repeat;
+
+    /**
+     * Contiene la foto del usuario subida en el formulario.
+     * @var UploadedFile
+     */
+    public $foto;
+
     /**
      * @inheritdoc
      */
@@ -55,12 +63,29 @@ class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
             [['nombre'], 'unique'],
             [['email'], 'default'],
             [['email'], 'email'],
+            [['foto'], 'file', 'extensions' => 'jpg'],
         ];
+    }
+
+    public function upload()
+    {
+        if ($model->foto === null) {
+            return true;
+        }
+        $nombre = Yii::getAlias('@uploads/') . $this->id . '.jpg';
+        $res = $this->foto->saveAs($nombre);
+        if ($res) {
+            Image::thumbnail($nombre, 80, null)->save($nombre);
+        }
+        return $res;
     }
 
     public function attributes()
     {
-        return array_merge(parent::attributes(), ['password_repeat']);
+        return array_merge(parent::attributes(), [
+            'password_repeat',
+            'foto',
+        ]);
     }
 
     /**
