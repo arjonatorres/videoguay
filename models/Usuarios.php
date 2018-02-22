@@ -14,6 +14,7 @@ use yii\web\IdentityInterface;
  * @property string $password
  * @property string $email
  * @property string $auth_key
+ * @property string $token_val
  */
 class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
 {
@@ -50,7 +51,7 @@ class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['nombre'], 'required'],
+            [['nombre', 'email'], 'required'],
             [['password', 'password_repeat'], 'required', 'on' => self::ESCENARIO_CREATE],
             [['nombre', 'password', 'password_repeat', 'email'], 'string', 'max' => 255],
             [
@@ -61,7 +62,6 @@ class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
                 'on' => [self::ESCENARIO_CREATE, self::ESCENARIO_UPDATE],
             ],
             [['nombre'], 'unique'],
-            [['email'], 'default'],
             [['email'], 'email'],
             [['foto'], 'file', 'extensions' => 'jpg'],
         ];
@@ -69,7 +69,7 @@ class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
 
     public function upload()
     {
-        if ($model->foto === null) {
+        if ($this->foto === null) {
             return true;
         }
         $nombre = Yii::getAlias('@uploads/') . $this->id . '.jpg';
@@ -136,6 +136,7 @@ class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
         if (parent::beforeSave($insert)) {
             if ($insert) {
                 $this->auth_key = Yii::$app->security->generateRandomString();
+                $this->token_val = Yii::$app->security->generateRandomString();
                 if ($this->scenario === self::ESCENARIO_CREATE) {
                     $this->password = Yii::$app->security->generatePasswordHash($this->password);
                 }
@@ -151,5 +152,19 @@ class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
             return true;
         }
         return false;
+    }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        if ($insert) {
+            $result = Yii::$app->mailer->compose(
+                'validacion',
+                ['token' => $this->token_val]
+            )
+                ->setFrom(Yii::$app->params['adminEmail'])
+                ->setTo('arjonatorres79@gmail.com')
+                ->setSubject('Validar usuario')
+                ->send();
+        }
     }
 }

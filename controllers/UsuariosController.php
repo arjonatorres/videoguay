@@ -115,6 +115,18 @@ class UsuariosController extends Controller
         ]);
     }
 
+    public function actionValidar($token = null)
+    {
+        if ($token !== null) {
+            $usuario = Usuarios::findOne(['token_val' => $token]);
+            if ($usuario !== null) {
+                $usuario->token_val = null;
+                $usuario->save();
+            }
+        }
+        return $this->goHome();
+    }
+
     /**
      * Finds the Usuarios model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
