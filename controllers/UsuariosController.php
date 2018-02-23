@@ -55,7 +55,7 @@ class UsuariosController extends Controller
             if ($model->save() && $model->upload()) {
                 Yii::$app->mailer->compose(
                     'validacion',
-                    ['token' => $this->token_val]
+                    ['token' => $model->token_val]
                 )
                     ->setFrom(Yii::$app->params['adminEmail'])
                     ->setTo($model->email)
