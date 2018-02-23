@@ -110,8 +110,13 @@ class SiteController extends Controller
         }
 
         $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->getUser()->token_val !== null) {
+                return $this->render('no-activado');
+            }
+            if ($model->login()) {
+                return $this->goBack();
+            }
         }
 
         $model->password = '';

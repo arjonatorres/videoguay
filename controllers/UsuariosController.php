@@ -53,7 +53,7 @@ class UsuariosController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             $model->foto = UploadedFile::getInstance($model, 'foto');
             if ($model->save() && $model->upload()) {
-                return $this->goHome();
+                return $this->render('usuario-creado');
             }
         }
 
@@ -122,6 +122,7 @@ class UsuariosController extends Controller
             if ($usuario !== null) {
                 $usuario->token_val = null;
                 $usuario->save();
+                return $this->render('usuario-validado');
             }
         }
         return $this->goHome();

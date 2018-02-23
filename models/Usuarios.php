@@ -156,15 +156,17 @@ class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
 
     public function afterSave($insert, $changedAttributes)
     {
-        if ($insert) {
-            $result = Yii::$app->mailer->compose(
-                'validacion',
-                ['token' => $this->token_val]
-            )
-                ->setFrom(Yii::$app->params['adminEmail'])
-                ->setTo('arjonatorres79@gmail.com')
-                ->setSubject('Validar usuario')
-                ->send();
-        }
+        parent::afterSave($insert, $changedAttributes);
+
+        // if ($insert) {
+        //     $result = Yii::$app->mailer->compose(
+        //         'validacion',
+        //         ['token' => $this->token_val]
+        //     )
+        //         ->setFrom(Yii::$app->params['adminEmail'])
+        //         ->setTo('arjonatorres79@gmail.com')
+        //         ->setSubject('Validar usuario')
+        //         ->send();
+        // }
     }
 }
