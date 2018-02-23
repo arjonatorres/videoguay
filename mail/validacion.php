@@ -7,4 +7,4 @@ use yii\helpers\Url;
 
 ?>
 <h2>Para activar su cuenta pulse en el siguiente enlace:</h2>
-<?= Html::a('Activar cuenta', Url::to("usuarios/validar?token=$token", true)) ?>
+<?= Html::a('Activar cuenta', Url::to(['usuarios/validar', 'token' => $token], true)) ?>

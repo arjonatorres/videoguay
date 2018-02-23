@@ -53,6 +53,14 @@ class UsuariosController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             $model->foto = UploadedFile::getInstance($model, 'foto');
             if ($model->save() && $model->upload()) {
+                Yii::$app->mailer->compose(
+                    'validacion',
+                    ['token' => $this->token_val]
+                )
+                    ->setFrom(Yii::$app->params['adminEmail'])
+                    ->setTo($model->email)
+                    ->setSubject('Validar usuario')
+                    ->send();
                 return $this->render('usuario-creado');
             }
         }
