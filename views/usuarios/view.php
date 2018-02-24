@@ -29,11 +29,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
             'nombre',
-            'password',
             'email:email',
-            'auth_key',
             [
                 'attribute' => 'Foto',
                 'value' => Url::to('/uploads/' . $model->id . '.jpg'),

@@ -7,6 +7,7 @@ use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\web\UploadedFile;
 use yii\widgets\ActiveForm;
@@ -61,7 +62,12 @@ class UsuariosController extends Controller
                     ->setTo($model->email)
                     ->setSubject('Validar usuario')
                     ->send();
-                return $this->render('usuario-creado');
+                Yii::$app->session->setFlash(
+                    'info',
+                    'Su cuenta ha sido creada correctamente. Para activar '
+                    . 'su cuenta pulse en el enlace del email que se le ha enviado.'
+                );
+                return $this->goHome();
             }
         }
 
@@ -130,7 +136,11 @@ class UsuariosController extends Controller
             if ($usuario !== null) {
                 $usuario->token_val = null;
                 $usuario->save();
-                return $this->render('usuario-validado');
+                Yii::$app->session->setFlash(
+                    'success',
+                    'Su cuenta ha sido activada correctamente.'
+                );
+                return $this->redirect(['site/login']);
             }
         }
         return $this->goHome();
